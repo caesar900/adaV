@@ -1,27 +1,543 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Я люблю Лину</title>
-  <style>
-    html, body { height: 100%; margin: 0; }
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: #ffffff;
-    }
-    h1 {
-      margin: 0;
-      font-size: clamp(28px, 6vw, 72px);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal - Регистрация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 32px;
+        }
+
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003087;
+            margin-left: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #0070ba;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #005ea6;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            font-size: 24px;
+            color: #003087;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0070ba;
+            box-shadow: 0 0 0 3px rgba(0, 112, 186, 0.2);
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #0070ba;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .checkbox-group a {
+            color: #0070ba;
+            text-decoration: none;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #005ea6;
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 25px 0;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .divider span {
+            background-color: white;
+            padding: 0 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .business-btn {
+            width: 100%;
+            background-color: white;
+            color: #0070ba;
+            border: 1px solid #0070ba;
+            border-radius: 24px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .business-btn:hover {
+            background-color: #f0f7ff;
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .footer-links a {
+            color: #0070ba;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f5f5f5;
+            padding: 30px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .footer-links-column {
+            flex: 1;
+            min-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-column h4 {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .footer-links-column ul {
+            list-style: none;
+        }
+
+        .footer-links-column li {
+            margin-bottom: 5px;
+        }
+
+        .footer-links-column a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer-links-column a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>я люблю лину,самая лучшая и прекрасная девушка в мире❤</h1>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <!-- В реальном PayPal здесь был бы логотип -->
+                <span>PayPal</span>
+            </div>
+            <div class="nav-links">
+                <a href="#">Личный</a>
+                <a href="#">Бизнес</a>
+                <a href="#">Разработчикам</a>
+                <a href="#">Помощь</a>
+            </div>
+            <button class="login-btn">Войти</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h1>Создайте аккаунт PayPal</h1>
+                    <p>Начните безопасно оплачивать покупки по всему миру</p>
+                </div>
+
+                <form id="registration-form">
+                    <div class="form-group">
+                        <label for="email">Электронная почта</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group password-toggle">
+                        <label for="password">Пароль</label>
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" class="toggle-password">Показать</button>
+                    </div>
+
+                    <div class="form-group password-toggle">
+                        <label for="confirm-password">Подтвердите пароль</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required>
+                        <button type="button" class="toggle-password">Показать</button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">Имя</label>
+                            <input type="text" id="first-name" name="first-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Фамилия</label>
+                            <input type="text" id="last-name" name="last-name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Номер телефона</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Страна или регион</label>
+                        <select id="country" name="country" required>
+                            <option value="">Выберите страну</option>
+                            <option value="RU">Россия</option>
+                            <option value="US">Соединенные Штаты</option>
+                            <option value="GB">Великобритания</option>
+                            <option value="DE">Германия</option>
+                            <option value="FR">Франция</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Адрес</label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Город</label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">Почтовый индекс</label>
+                            <input type="text" id="zip" name="zip" required>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            Я соглашаюсь с <a href="#">Пользовательским соглашением</a>, 
+                            <a href="#">Политикой конфиденциальности</a> и 
+                            <a href="#">Соглашением о отправке денег</a> PayPal.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Продолжить</button>
+
+                    <div class="divider">
+                        <span>или</span>
+                    </div>
+
+                    <button type="button" class="business-btn">Открыть бизнес-аккаунт</button>
+                </form>
+
+                <div class="footer-links">
+                    <a href="#">Конфиденциальность</a>
+                    <a href="#">Правовая информация</a>
+                    <a href="#">Сборы</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links-column">
+                    <h4>Помощь и контакты</h4>
+                    <ul>
+                        <li><a href="#">Справка</a></li>
+                        <li><a href="#">Связаться с нами</a></li>
+                        <li><a href="#">Безопасность</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-column">
+                    <h4>PayPal</h4>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Новости</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-column">
+                    <h4>Магазинам</h4>
+                    <ul>
+                        <li><a href="#">Продавайте через PayPal</a></li>
+                        <li><a href="#">Бизнес-аккаунт</a></li>
+                        <li><a href="#">Партнеры</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-column">
+                    <h4>Разработчикам</h4>
+                    <ul>
+                        <li><a href="#">PayPal для разработчиков</a></li>
+                        <li><a href="#">Документация</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>Copyright © 1999–2023 PayPal. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Переключение видимости пароля
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.textContent = 'Скрыть';
+                } else {
+                    input.type = 'password';
+                    this.textContent = 'Показать';
+                }
+            });
+        });
+
+        // Валидация формы
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                alert('Пароли не совпадают!');
+                return;
+            }
+            
+            if (!document.getElementById('terms').checked) {
+                alert('Вы должны принять условия соглашения!');
+                return;
+            }
+            
+            // В реальном приложении здесь был бы AJAX-запрос к серверу
+            alert('Регистрация успешно завершена!');
+        });
+
+        // Автозаполнение города по почтовому индексу (упрощенная версия)
+        document.getElementById('zip').addEventListener('blur', function() {
+            const zip = this.value;
+            const cityField = document.getElementById('city');
+            
+            // Простая логика для демонстрации
+            if (zip === '101000') {
+                cityField.value = 'Москва';
+            } else if (zip === '190000') {
+                cityField.value = 'Санкт-Петербург';
+            }
+        });
+    </script>
 </body>
 </html>
