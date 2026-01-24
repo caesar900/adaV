@@ -1,756 +1,3786 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayPal - Sign Up</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>🔵</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RE:OSINT | Платформа оперативной разведки</title>
+    <meta name="description" content="Профессиональная платформа OSINT инструментов для этического хакинга и киберразведки">
+    <meta name="keywords" content="OSINT, кибербезопасность, этический хакинг, разведка, инструменты, анализ данных">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* ===== CSS RESET & GLOBAL VARIABLES ===== */
+        :root {
+            --bg-primary: #0b0f0d;
+            --bg-secondary: #111917;
+            --bg-tertiary: #1a211e;
+            --bg-card: rgba(26, 33, 30, 0.8);
+            --accent-primary: #00ff9c;
+            --accent-secondary: #00cc7d;
+            --accent-danger: #ff2b2b;
+            --accent-warning: #ffcc00;
+            --accent-info: #00a8ff;
+            --text-primary: #e6fef3;
+            --text-secondary: #9bbfb0;
+            --text-muted: #6d8a80;
+            --border-color: #2a3a34;
+            --border-glow: rgba(0, 255, 156, 0.3);
+            --shadow-glow: 0 0 15px rgba(0, 255, 156, 0.4);
+            --shadow-glow-strong: 0 0 25px rgba(0, 255, 156, 0.6);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --header-height: 80px;
+            --terminal-font: 'Share Tech Mono', monospace;
+            --code-font: 'JetBrains Mono', monospace;
+            --ui-font: 'IBM Plex Mono', monospace;
+            --glitch-intensity: 0.02;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            background-color: var(--bg-primary);
+            overflow-x: hidden;
         }
 
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: var(--ui-font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            opacity: 1;
+            transition: opacity var(--transition-slow);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        body.fade-out {
+            opacity: 0;
         }
 
-        header {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 15px 0;
+        /* ===== SCROLLBAR STYLING ===== */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
         }
 
-        .header-content {
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 6px;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        }
+
+        ::selection {
+            background-color: rgba(0, 255, 156, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* ===== GLOBAL UTILITY CLASSES ===== */
+        .text-gradient {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .text-danger {
+            color: var(--accent-danger);
+        }
+
+        .text-warning {
+            color: var(--accent-warning);
+        }
+
+        .text-info {
+            color: var(--accent-info);
+        }
+
+        .text-success {
+            color: var(--accent-primary);
+        }
+
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--accent-danger);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-1 5s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: 2px 0 var(--accent-info);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        .neon-glow {
+            box-shadow: var(--shadow-glow);
+            transition: box-shadow var(--transition-medium);
+        }
+
+        .neon-glow:hover {
+            box-shadow: var(--shadow-glow-strong);
+        }
+
+        .terminal-style {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--accent-primary);
+            border-radius: 4px;
+            font-family: var(--terminal-font);
+            color: var(--accent-primary);
+            padding: 1rem;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .terminal-style::before {
+            content: '> ';
+            color: var(--accent-danger);
+        }
+
+        .cyber-border {
+            position: relative;
+            border: 1px solid transparent;
+            background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+                        linear-gradient(135deg, var(--accent-primary), transparent 30%, var(--accent-info)) border-box;
+            border-radius: 8px;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid var(--accent-primary);
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        /* ===== PRELOADER ===== */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            z-index: 9999;
+            transition: opacity var(--transition-slow), visibility var(--transition-slow);
+        }
+
+        #preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .terminal-container {
+            width: 90%;
+            max-width: 800px;
+            height: 400px;
+            background-color: #000;
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 156, 0.5);
+            position: relative;
+        }
+
+        .terminal-header {
+            background-color: #111;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--accent-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background-color: #ff5f56; }
+        .terminal-dot.yellow { background-color: #ffbd2e; }
+        .terminal-dot.green { background-color: #27ca3f; }
+
+        .terminal-title {
+            margin-left: 15px;
+            color: var(--accent-primary);
+            font-family: var(--terminal-font);
+            font-size: 0.9rem;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: var(--terminal-font);
+            color: var(--accent-primary);
+            height: calc(100% - 45px);
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .terminal-prompt {
+            color: var(--accent-danger);
+            margin-right: 10px;
+        }
+
+        .terminal-command {
+            color: var(--accent-primary);
+        }
+
+        .terminal-output {
+            color: var(--text-secondary);
+            margin-left: 20px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .terminal-output.success {
+            color: var(--accent-primary);
+        }
+
+        .terminal-output.warning {
+            color: var(--accent-warning);
+        }
+
+        .terminal-output.error {
+            color: var(--accent-danger);
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 3px;
+            background-color: #222;
+            margin-top: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            transition: width 0.5s ease;
+            animation: loading-pulse 2s infinite;
+        }
+
+        /* ===== HEADER & NAVIGATION ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: rgba(11, 15, 13, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 156, 0.1);
+            z-index: 1000;
+            transition: all var(--transition-medium);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        header.scrolled {
+            height: 70px;
+            background-color: rgba(11, 15, 13, 0.95);
+            border-bottom: 1px solid rgba(0, 255, 156, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
             display: flex;
             align-items: center;
+            gap: 12px;
+            margin-right: auto;
         }
 
-        .paypal-logo {
-            height: 32px;
-            width: auto;
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: shine 3s infinite;
+        }
+
+        .logo-text {
+            font-family: var(--code-font);
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--accent-danger);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
         }
 
         .nav-links {
             display: flex;
-            gap: 25px;
+            gap: 30px;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #0070ba;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 5px 0;
+        .nav-link {
             position: relative;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: var(--code-font);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 0;
+            transition: color var(--transition-fast);
         }
 
-        .nav-links a:hover::after {
-            content: "";
+        .nav-link::before {
+            content: '';
             position: absolute;
             bottom: 0;
             left: 0;
-            right: 0;
+            width: 0;
             height: 2px;
-            background-color: #0070ba;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            transition: width var(--transition-medium);
         }
 
-        .login-btn {
-            background-color: #0070ba;
-            color: white;
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+        }
+
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
             border: none;
-            border-radius: 20px;
-            padding: 8px 20px;
-            font-size: 14px;
-            font-weight: 600;
+            color: var(--accent-primary);
+            font-size: 1.8rem;
             cursor: pointer;
-            transition: all 0.3s;
+            z-index: 1001;
         }
 
-        .login-btn:hover {
-            background-color: #005ea6;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-medium), visibility var(--transition-medium);
         }
 
-        .main-content {
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .mobile-nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: var(--code-font);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding: 10px 20px;
+        }
+
+        .mobile-nav-link::before {
+            content: '[ ';
+            color: var(--accent-primary);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .mobile-nav-link::after {
+            content: ' ]';
+            color: var(--accent-primary);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .mobile-nav-link:hover::before,
+        .mobile-nav-link:hover::after {
+            opacity: 1;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 5%;
+            overflow: hidden;
+            margin-top: var(--header-height);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://raw.githubusercontent.com/erebus-team/assets/main/fsociety-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -3;
+            filter: brightness(0.4) contrast(1.2) saturate(1.3);
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 15, 13, 0.7);
+            z-index: -2;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><rect width="100" height="100" fill="none" stroke="white" stroke-width="1"/></svg>');
+            background-size: 100px;
+            z-index: -1;
+            animation: grain 8s steps(10) infinite;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1200px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: var(--code-font);
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .hero-btn {
+            padding: 15px 35px;
+            border-radius: 4px;
+            font-family: var(--code-font);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero-btn.primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #000;
+            border: none;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .hero-btn.primary:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow-strong);
+        }
+
+        .hero-btn.secondary {
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .hero-btn.secondary:hover {
+            background-color: rgba(0, 255, 156, 0.1);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s;
+            z-index: -1;
+        }
+
+        .hero-btn:hover::before {
+            left: 100%;
+        }
+
+        .hero-terminal {
+            margin-top: 5rem;
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 156, 0.05), transparent);
+            z-index: 0;
+        }
+
+        .hero-terminal-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-command-line {
+            margin-bottom: 1rem;
+            font-family: var(--terminal-font);
+        }
+
+        .terminal-command-line .prompt {
+            color: var(--accent-danger);
+        }
+
+        .terminal-command-line .command {
+            color: var(--accent-primary);
+        }
+
+        .terminal-command-line .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 20px;
+            background-color: var(--accent-primary);
+            margin-left: 5px;
+            vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+
+        /* ===== MAIN SECTIONS ===== */
+        .main-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background-color: var(--bg-secondary);
+        }
+
+        .section-title {
+            font-family: var(--code-font);
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            line-height: 1.6;
+        }
+
+        /* ===== OSINT TYPES SECTION ===== */
+        .osint-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .osint-type-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .osint-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 156, 0.05), rgba(0, 168, 255, 0.05));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity var(--transition-medium);
+        }
+
+        .osint-type-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .osint-type-card:hover::before {
+            opacity: 1;
+        }
+
+        .osint-type-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #000;
+        }
+
+        .osint-type-title {
+            font-family: var(--code-font);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .osint-type-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .osint-type-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .osint-type-tag {
+            background-color: rgba(0, 255, 156, 0.1);
+            color: var(--accent-primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: var(--code-font);
+        }
+
+        .osint-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
-            padding: 40px 0;
-            min-height: calc(100vh - 200px);
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-medium), visibility var(--transition-medium);
         }
 
-        .form-container {
-            background-color: white;
+        .osint-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .osint-modal-content {
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-primary);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 480px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform var(--transition-medium);
         }
 
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
+        .osint-modal.active .osint-modal-content {
+            transform: translateY(0);
         }
 
-        .form-header h1 {
-            font-size: 24px;
-            color: #003087;
-            margin-bottom: 10px;
-            font-weight: 600;
+        .osint-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color var(--transition-fast);
         }
 
-        .form-header p {
-            font-size: 14px;
-            color: #666;
+        .osint-modal-close:hover {
+            color: var(--accent-danger);
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .osint-modal-title {
+            font-family: var(--code-font);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
         }
 
-        .form-row {
+        .osint-modal-body {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .osint-modal-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .osint-modal-body ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .osint-modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== TOOLS SECTION ===== */
+        .tools-categories {
             display: flex;
-            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
         }
 
-        .form-row .form-group {
+        .tool-category-btn {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 0.8rem 1.8rem;
+            font-family: var(--code-font);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .tool-category-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .tool-category-btn.active {
+            background-color: rgba(0, 255, 156, 0.1);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 156, 0.05), transparent);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity var(--transition-medium);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #000;
+            flex-shrink: 0;
+        }
+
+        .tool-title {
+            font-family: var(--code-font);
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tool-btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .tool-btn.primary {
+            background-color: rgba(0, 255, 156, 0.1);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .tool-btn.primary:hover {
+            background-color: rgba(0, 255, 156, 0.2);
+        }
+
+        .tool-btn.secondary {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .tool-btn.secondary:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .tool-expand-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-medium);
+            margin-top: 1.5rem;
+        }
+
+        .tool-expand-content.active {
+            max-height: 1000px;
+        }
+
+        .tool-code-block {
+            background-color: #000;
+            border: 1px solid var(--accent-primary);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            font-family: var(--terminal-font);
+            color: var(--accent-primary);
+            overflow-x: auto;
+        }
+
+        /* ===== GUIDES SECTION ===== */
+        .guides-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .guide-accordion {
+            margin-bottom: 1rem;
+        }
+
+        .guide-accordion-header {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .guide-accordion-header:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .guide-accordion-header.active {
+            background-color: rgba(0, 255, 156, 0.05);
+            border-color: var(--accent-primary);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .guide-accordion-title {
+            font-family: var(--code-font);
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .guide-accordion-icon {
+            color: var(--accent-primary);
+            transition: transform var(--transition-fast);
+        }
+
+        .guide-accordion-header.active .guide-accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .guide-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            background-color: var(--bg-card);
+            border-left: 1px solid var(--accent-primary);
+            border-right: 1px solid var(--accent-primary);
+            border-bottom: 1px solid var(--accent-primary);
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            transition: max-height var(--transition-medium);
+        }
+
+        .guide-accordion-content.active {
+            max-height: 2000px;
+        }
+
+        .guide-content {
+            padding: 2rem;
+        }
+
+        .guide-step {
+            margin-bottom: 2rem;
+        }
+
+        .guide-step-title {
+            font-family: var(--code-font);
+            font-size: 1.1rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .guide-step-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .guide-code-block {
+            background-color: #000;
+            border: 1px solid var(--accent-primary);
+            border-radius: 4px;
+            padding: 1.5rem;
+            font-family: var(--terminal-font);
+            color: var(--accent-primary);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== HACKING SECTION ===== */
+        .hacking-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .hacking-tab {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem 2rem;
+            font-family: var(--code-font);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .hacking-tab:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .hacking-tab.active {
+            background-color: rgba(0, 255, 156, 0.1);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .hacking-tab-content {
+            display: none;
+        }
+
+        .hacking-tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .hacking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .hacking-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all var(--transition-medium);
+        }
+
+        .hacking-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .hacking-card-title {
+            font-family: var(--code-font);
+            font-size: 1.4rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .hacking-card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .hacking-diagram {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .hacking-svg {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ===== TELEGRAM SECTION ===== */
+        .telegram-section {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #0a1a15 100%);
+            border-top: 1px solid var(--accent-primary);
+            border-bottom: 1px solid var(--accent-primary);
+        }
+
+        .telegram-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .telegram-content {
             flex: 1;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
+        .telegram-title {
+            font-family: var(--code-font);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
         }
 
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: all 0.3s;
-            background-color: #fff;
+        .telegram-title span {
+            color: var(--accent-primary);
         }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: #0070ba;
-            box-shadow: 0 0 0 3px rgba(0, 112, 186, 0.2);
+        .telegram-desc {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
         }
 
-        .password-toggle {
-            position: relative;
+        .telegram-features {
+            list-style-type: none;
+            margin-bottom: 2rem;
         }
 
-        .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #0070ba;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-group input {
-            width: auto;
-            margin-right: 10px;
-            margin-top: 3px;
-        }
-
-        .checkbox-group label {
-            font-size: 14px;
-            line-height: 1.4;
-            font-weight: normal;
-        }
-
-        .checkbox-group a {
-            color: #0070ba;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .checkbox-group a:hover {
-            text-decoration: underline;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background-color: #0070ba;
-            color: white;
-            border: none;
-            border-radius: 24px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-        }
-
-        .submit-btn:hover {
-            background-color: #005ea6;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .divider {
-            text-align: center;
-            position: relative;
-            margin: 25px 0;
-        }
-
-        .divider::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-
-        .divider span {
-            background-color: white;
-            padding: 0 15px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .business-btn {
-            width: 100%;
-            background-color: white;
-            color: #0070ba;
-            border: 1px solid #0070ba;
-            border-radius: 24px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .business-btn:hover {
-            background-color: #f0f7ff;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .form-footer a {
-            color: #0070ba;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: 500;
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .security-badges {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .badge {
+        .telegram-feature {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 12px;
-            color: #666;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
         }
 
-        .badge-icon {
-            width: 16px;
-            height: 16px;
-            background-color: #28a745;
+        .telegram-feature i {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+        }
+
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, #0088cc, #00afff);
+            color: white;
+            text-decoration: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 4px;
+            font-family: var(--code-font);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all var(--transition-medium);
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .telegram-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 136, 204, 0.5);
+        }
+
+        .telegram-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .telegram-icon {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #0088cc, #00afff);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 8rem;
             color: white;
-            font-size: 10px;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
         }
 
+        .telegram-icon::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0088cc, #00afff);
+            opacity: 0.3;
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing-plans {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 350px;
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 156, 0.05), transparent);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity var(--transition-medium);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background-color: var(--accent-primary);
+            color: #000;
+            padding: 0.5rem 3rem;
+            font-family: var(--code-font);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transform: rotate(45deg);
+        }
+
+        .pricing-title {
+            font-family: var(--code-font);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .pricing-price {
+            font-family: var(--code-font);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-period {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features {
+            list-style-type: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-feature i {
+            color: var(--accent-primary);
+            font-size: 1rem;
+        }
+
+        .pricing-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: var(--code-font);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .pricing-btn.primary {
+            background-color: rgba(0, 255, 156, 0.1);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .pricing-btn.primary:hover {
+            background-color: rgba(0, 255, 156, 0.2);
+        }
+
+        .pricing-btn.secondary {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .pricing-btn.secondary:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        /* ===== FOOTER ===== */
         footer {
-            background-color: #f5f5f5;
-            padding: 40px 0 20px;
-            border-top: 1px solid #ddd;
+            background-color: var(--bg-tertiary);
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
         }
 
         .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
-        .footer-links-column {
-            flex: 1;
-            min-width: 150px;
-            margin-bottom: 20px;
+        .footer-logo {
+            font-family: var(--code-font);
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
         }
 
-        .footer-links-column h4 {
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #333;
+        .footer-text {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
         }
 
-        .footer-links-column ul {
-            list-style: none;
+        .footer-links h4 {
+            font-family: var(--code-font);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
         }
 
-        .footer-links-column li {
-            margin-bottom: 8px;
+        .footer-links ul {
+            list-style-type: none;
         }
 
-        .footer-links-column a {
-            color: #666;
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
             text-decoration: none;
+            transition: color var(--transition-fast);
         }
 
-        .footer-links-column a:hover {
-            color: #0070ba;
-            text-decoration: underline;
+        .footer-links a:hover {
+            color: var(--accent-primary);
         }
 
-        .copyright {
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .social-link:hover {
+            background-color: var(--accent-primary);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
             text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #666;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
-        .language-selector {
-            text-align: center;
-            margin-top: 15px;
+        /* ===== BACKGROUND EFFECTS ===== */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .language-selector select {
-            width: auto;
-            padding: 5px 10px;
-            font-size: 12px;
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.3;
+            animation: scanlines 10s linear infinite;
         }
 
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.03"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)"/></svg>');
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.3;
+        }
+
+        .cursor-effect {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 156, 0.3);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: transform 0.1s;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(24px, 550px, 90px, 0); }
+            5% { clip: rect(85px, 550px, 140px, 0); }
+            10% { clip: rect(66px, 550px, 120px, 0); }
+            15% { clip: rect(42px, 550px, 100px, 0); }
+            20% { clip: rect(34px, 550px, 85px, 0); }
+            25% { clip: rect(78px, 550px, 135px, 0); }
+            30% { clip: rect(54px, 550px, 115px, 0); }
+            35% { clip: rect(62px, 550px, 125px, 0); }
+            40% { clip: rect(29px, 550px, 80px, 0); }
+            45% { clip: rect(88px, 550px, 145px, 0); }
+            50% { clip: rect(72px, 550px, 130px, 0); }
+            55% { clip: rect(48px, 550px, 105px, 0); }
+            60% { clip: rect(38px, 550px, 95px, 0); }
+            65% { clip: rect(66px, 550px, 120px, 0); }
+            70% { clip: rect(82px, 550px, 140px, 0); }
+            75% { clip: rect(58px, 550px, 115px, 0); }
+            80% { clip: rect(44px, 550px, 100px, 0); }
+            85% { clip: rect(68px, 550px, 125px, 0); }
+            90% { clip: rect(32px, 550px, 85px, 0); }
+            95% { clip: rect(76px, 550px, 135px, 0); }
+            100% { clip: rect(24px, 550px, 90px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(85px, 550px, 140px, 0); }
+            5% { clip: rect(24px, 550px, 90px, 0); }
+            10% { clip: rect(42px, 550px, 100px, 0); }
+            15% { clip: rect(66px, 550px, 120px, 0); }
+            20% { clip: rect(78px, 550px, 135px, 0); }
+            25% { clip: rect(34px, 550px, 85px, 0); }
+            30% { clip: rect(62px, 550px, 125px, 0); }
+            35% { clip: rect(54px, 550px, 115px, 0); }
+            40% { clip: rect(88px, 550px, 145px, 0); }
+            45% { clip: rect(29px, 550px, 80px, 0); }
+            50% { clip: rect(48px, 550px, 105px, 0); }
+            55% { clip: rect(72px, 550px, 130px, 0); }
+            60% { clip: rect(66px, 550px, 120px, 0); }
+            65% { clip: rect(38px, 550px, 95px, 0); }
+            70% { clip: rect(58px, 550px, 115px, 0); }
+            75% { clip: rect(82px, 550px, 140px, 0); }
+            80% { clip: rect(68px, 550px, 125px, 0); }
+            85% { clip: rect(44px, 550px, 100px, 0); }
+            90% { clip: rect(76px, 550px, 135px, 0); }
+            95% { clip: rect(32px, 550px, 85px, 0); }
+            100% { clip: rect(85px, 550px, 140px, 0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--accent-primary); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -10%); }
+            20% { transform: translate(-15%, 5%); }
+            30% { transform: translate(7%, -25%); }
+            40% { transform: translate(-5%, 25%); }
+            50% { transform: translate(-15%, 10%); }
+            60% { transform: translate(15%, 0); }
+            70% { transform: translate(0, 15%); }
+            80% { transform: translate(3%, -35%); }
+            90% { transform: translate(-10%, -10%); }
+        }
+
+        @keyframes loading-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .section-title {
+                font-size: 2.5rem;
             }
             
+            .hero-title {
+                font-size: 3.8rem;
+            }
+            
+            .telegram-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .telegram-visual {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 992px) {
             .nav-links {
                 display: none;
             }
             
-            .footer-content {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 3.2rem;
+            }
+            
+            .osint-types-grid,
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .pricing-plans {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .pricing-card.featured:hover {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section {
+                padding: 4rem 5%;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+            
+            .tools-categories,
+            .hacking-tabs {
+                gap: 0.5rem;
+            }
+            
+            .tool-category-btn,
+            .hacking-tab {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .osint-types-grid,
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tool-actions {
                 flex-direction: column;
             }
             
-            .security-badges {
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
+            .telegram-icon {
+                width: 200px;
+                height: 200px;
+                font-size: 5rem;
+            }
+            
+            .terminal-container {
+                height: 300px;
+            }
+            
+            .hero-terminal {
+                padding: 1.5rem;
             }
         }
 
-        .paypal-benefits {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        /* ===== KEYBOARD SHORTCUTS UI ===== */
+        .keyboard-shortcuts {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-primary);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 1.5rem;
+            width: 300px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all var(--transition-medium);
         }
 
-        .benefits-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #003087;
+        .keyboard-shortcuts.active {
+            transform: translateY(0);
+            opacity: 1;
         }
 
-        .benefits-list {
-            list-style: none;
+        .shortcuts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
-        .benefits-list li {
-            margin-bottom: 10px;
-            padding-left: 25px;
-            position: relative;
-            font-size: 14px;
+        .shortcuts-title {
+            font-family: var(--code-font);
+            color: var(--accent-primary);
+            font-size: 1.2rem;
         }
 
-        .benefits-list li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #28a745;
-            font-weight: bold;
+        .shortcuts-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color var(--transition-fast);
         }
 
-        .error-message {
-            display: none;
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 12px;
+        .shortcuts-close:hover {
+            color: var(--accent-danger);
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .shortcut-key {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-primary);
+            padding: 0.3rem 0.6rem;
             border-radius: 4px;
-            margin-bottom: 20px;
-            text-align: center;
-            border: 1px solid #f5c6cb;
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .shortcut-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .shortcut-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            cursor: pointer;
+            z-index: 999;
+            transition: all var(--transition-fast);
+        }
+
+        .shortcut-hint:hover {
+            background-color: rgba(0, 255, 156, 0.1);
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">
-                <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="paypal-logo">
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot yellow"></div>
+                    <div class="terminal-dot green"></div>
+                </div>
+                <div class="terminal-title">root@re:osint:~</div>
             </div>
-            <div class="nav-links">
-                <a href="#">Personal</a>
-                <a href="#">Business</a>
-                <a href="#">Developer</a>
-                <a href="#">Help</a>
+            <div class="terminal-body">
+                <div class="terminal-line">
+                    <div class="terminal-prompt">$</div>
+                    <div class="terminal-command">systemctl start osint-core</div>
+                </div>
+                <div class="terminal-output">Initializing OSINT core...</div>
+                <div class="terminal-line">
+                    <div class="terminal-prompt">$</div>
+                    <div class="terminal-command">load_modules --all</div>
+                </div>
+                <div class="terminal-output">Loading modules...</div>
+                <div class="terminal-line">
+                    <div class="terminal-prompt">$</div>
+                    <div class="terminal-command">connect --nodes darknet</div>
+                </div>
+                <div class="terminal-output">Connecting to darknet nodes...</div>
+                <div class="terminal-line">
+                    <div class="terminal-prompt">$</div>
+                    <div class="terminal-command">auth --bypass --level 5</div>
+                </div>
+                <div class="terminal-output success">Access granted.</div>
+                <div class="terminal-line">
+                    <div class="terminal-prompt">$</div>
+                    <div class="terminal-command">boot --interface web</div>
+                </div>
+                <div class="terminal-output success">System ready. Launching interface...</div>
+                <div class="terminal-line">
+                    <div class="terminal-prompt">$</div>
+                    <div class="terminal-command" id="final-command">_</div>
+                </div>
             </div>
-            <button class="login-btn">Log In</button>
         </div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <button class="mobile-menu-close" id="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="mobile-nav-links">
+            <a href="#home" class="mobile-nav-link" data-section="home">Главная</a>
+            <a href="#osint" class="mobile-nav-link" data-section="osint">OSINT</a>
+            <a href="#tools" class="mobile-nav-link" data-section="tools">Инструменты</a>
+            <a href="#guides" class="mobile-nav-link" data-section="guides">Гайды</a>
+            <a href="#hacking" class="mobile-nav-link" data-section="hacking">Hacking</a>
+            <a href="#telegram" class="mobile-nav-link" data-section="telegram">Telegram</a>
+            <a href="#pricing" class="mobile-nav-link" data-section="pricing">Тарифы</a>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-terminal"></i>
+            </div>
+            <div class="logo-text">RE:<span>OSINT</span></div>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="#home" class="nav-link active" data-section="home">Главная</a>
+            <a href="#osint" class="nav-link" data-section="osint">OSINT</a>
+            <a href="#tools" class="nav-link" data-section="tools">Инструменты</a>
+            <a href="#guides" class="nav-link" data-section="guides">Гайды</a>
+            <a href="#hacking" class="nav-link" data-section="hacking">Hacking</a>
+            <a href="#telegram" class="nav-link" data-section="telegram">Telegram</a>
+            <a href="#pricing" class="nav-link" data-section="pricing">Тарифы</a>
+        </nav>
+        
+        <button class="mobile-menu-btn" id="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <a href="https://t.me/erafox" target="_blank" class="telegram-btn">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
     </header>
 
-    <main class="main-content">
-        <div class="container">
-            <div class="form-container">
-                <div class="form-header">
-                    <h1>Create a PayPal Account</h1>
-                    <p>Start shopping safely around the world</p>
-                </div>
-
-                <div class="error-message" id="errorMessage">
-                    There was an error with your information. Please try again on the official PayPal website.
-                </div>
-
-                <div class="paypal-benefits">
-                    <div class="benefits-title">PayPal Benefits:</div>
-                    <ul class="benefits-list">
-                        <li>Secure payments worldwide</li>
-                        <li>One-click shopping</li>
-                        <li>Money back guarantee</li>
-                        <li>Link cards and bank accounts</li>
-                    </ul>
-                </div>
-
-                <form id="registration-form">
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title glitch-text" data-text="RE:OSINT">RE:OSINT</h1>
+            <p class="hero-subtitle">Платформа оперативной разведки открытых источников. Инструменты, методологии и знания для профессионального анализа цифрового пространства.</p>
+            
+            <div class="hero-buttons">
+                <a href="#tools" class="hero-btn primary">ENTER OSINT</a>
+                <a href="#telegram" class="hero-btn secondary">JOIN TELEGRAM</a>
+            </div>
+            
+            <div class="hero-terminal">
+                <div class="hero-terminal-content">
+                    <div class="terminal-command-line">
+                        <span class="prompt">user@osint:~$</span>
+                        <span class="command">search --target "digital footprint" --depth 5</span>
                     </div>
-
-                    <div class="form-group password-toggle">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
-                        <button type="button" class="toggle-password">Show</button>
+                    <div class="terminal-command-line">
+                        <span class="prompt">user@osint:~$</span>
+                        <span class="command">analyze --sources social,network,geo --output visual</span>
                     </div>
-
-                    <div class="form-group password-toggle">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeat your password" required>
-                        <button type="button" class="toggle-password">Show</button>
+                    <div class="terminal-command-line">
+                        <span class="prompt">user@osint:~$</span>
+                        <span class="command">connect --secure --protocol onion</span>
+                        <span class="cursor"></span>
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="first-name">First Name</label>
-                            <input type="text" id="first-name" name="first-name" placeholder="John" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="last-name">Last Name</label>
-                            <input type="text" id="last-name" name="last-name" placeholder="Doe" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="country">Country or Region</label>
-                        <select id="country" name="country" required>
-                            <option value="">Select Country</option>
-                            <option value="US">United States</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="DE">Germany</option>
-                            <option value="FR">France</option>
-                            <option value="CA">Canada</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="text" id="address" name="address" placeholder="Street, house, apartment" required>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="city">City</label>
-                            <input type="text" id="city" name="city" placeholder="New York" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="zip">ZIP Code</label>
-                            <input type="text" id="zip" name="zip" placeholder="10001" required>
-                        </div>
-                    </div>
-
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">
-                            I agree to the <a href="#">User Agreement</a>, 
-                            <a href="#">Privacy Policy</a> and 
-                            <a href="#">Money Transfer Agreement</a> of PayPal.
-                        </label>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Continue</button>
-
-                    <div class="security-badges">
-                        <div class="badge">
-                            <div class="badge-icon">✓</div>
-                            <span>Buyer Protection</span>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">✓</div>
-                            <span>SSL Encryption</span>
-                        </div>
-                    </div>
-
-                    <div class="divider">
-                        <span>or</span>
-                    </div>
-
-                    <button type="button" class="business-btn">Open Business Account</button>
-                </form>
-
-                <div class="form-footer">
-                    <a href="#">Privacy</a>
-                    <a href="#">Legal</a>
-                    <a href="#">Fees</a>
                 </div>
             </div>
         </div>
+    </section>
+
+    <!-- Background Effects -->
+    <div class="particles-container" id="particles"></div>
+    <div class="scanlines"></div>
+    <div class="noise-overlay"></div>
+    <div class="cursor-effect" id="cursor"></div>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- OSINT Section -->
+        <section class="section" id="osint">
+            <h2 class="section-title">Что такое <span class="text-gradient">OSINT</span>?</h2>
+            <p class="section-subtitle">Open Source Intelligence (OSINT) — методология сбора и анализа информации из общедоступных источников для получения разведывательных данных.</p>
+            
+            <div class="osint-types-grid">
+                <!-- Social OSINT -->
+                <div class="osint-type-card" data-modal="social">
+                    <div class="osint-type-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="osint-type-title">Social OSINT</h3>
+                    <p class="osint-type-desc">Анализ социальных сетей, профилей, связей и активности пользователей в открытых источниках.</p>
+                    <div class="osint-type-tags">
+                        <span class="osint-type-tag">Twitter</span>
+                        <span class="osint-type-tag">Facebook</span>
+                        <span class="osint-type-tag">VK</span>
+                        <span class="osint-type-tag">Instagram</span>
+                    </div>
+                </div>
+                
+                <!-- Phone OSINT -->
+                <div class="osint-type-card" data-modal="phone">
+                    <div class="osint-type-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3 class="osint-type-title">Phone OSINT</h3>
+                    <p class="osint-type-desc">Исследование телефонных номеров, поиск владельцев, связанных аккаунтов и истории активности.</p>
+                    <div class="osint-type-tags">
+                        <span class="osint-type-tag">Номера</span>
+                        <span class="osint-type-tag">Операторы</span>
+                        <span class="osint-type-tag">Геолокация</span>
+                    </div>
+                </div>
+                
+                <!-- Email OSINT -->
+                <div class="osint-type-card" data-modal="email">
+                    <div class="osint-type-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="osint-type-title">Email OSINT</h3>
+                    <p class="osint-type-desc">Поиск утечек, связанных аккаунтов, анализ метаданных и отслеживание цифрового следа по email.</p>
+                    <div class="osint-type-tags">
+                        <span class="osint-type-tag">Утечки</span>
+                        <span class="osint-type-tag">Базы данных</span>
+                        <span class="osint-type-tag">HaveIBeenPwned</span>
+                    </div>
+                </div>
+                
+                <!-- Image OSINT -->
+                <div class="osint-type-card" data-modal="image">
+                    <div class="osint-type-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h3 class="osint-type-title">Image OSINT</h3>
+                    <p class="osint-type-desc">Обратный поиск изображений, анализ метаданных EXIF, геолокация и идентификация объектов.</p>
+                    <div class="osint-type-tags">
+                        <span class="osint-type-tag">EXIF</span>
+                        <span class="osint-type-tag">Обратный поиск</span>
+                        <span class="osint-type-tag">Геотеги</span>
+                    </div>
+                </div>
+                
+                <!-- GEO OSINT -->
+                <div class="osint-type-card" data-modal="geo">
+                    <div class="osint-type-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="osint-type-title">GEO OSINT</h3>
+                    <p class="osint-type-desc">Геолокационный анализ, спутниковые снимки, картографические данные и привязка к местности.</p>
+                    <div class="osint-type-tags">
+                        <span class="osint-type-tag">Google Earth</span>
+                        <span class="osint-type-tag">Спутники</span>
+                        <span class="osint-type-tag">Карты</span>
+                    </div>
+                </div>
+                
+                <!-- Dark OSINT -->
+                <div class="osint-type-card" data-modal="dark">
+                    <div class="osint-type-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h3 class="osint-type-title">Dark OSINT</h3>
+                    <p class="osint-type-desc">Исследование darknet, поиск в закрытых источниках и анализ скрытых сетей (только законные методы).</p>
+                    <div class="osint-type-tags">
+                        <span class="osint-type-tag">Onion</span>
+                        <span class="osint-type-tag">I2P</span>
+                        <span class="osint-type-tag">Форумы</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OSINT Modals -->
+        <div class="osint-modal" id="social-modal">
+            <div class="osint-modal-content">
+                <button class="osint-modal-close" data-modal="social">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="osint-modal-title">Social OSINT</h2>
+                <div class="osint-modal-body">
+                    <p>Social OSINT фокусируется на сборе и анализе информации из социальных сетей и платформ, где пользователи добровольно делятся данными.</p>
+                    
+                    <p><strong>Основные источники:</strong></p>
+                    <ul>
+                        <li>Twitter (X) - анализ твитов, связей, активностей</li>
+                        <li>Facebook/Instagram - профили, группы, мероприятия</li>
+                        <li>ВКонтакте - наиболее полные данные в Рунете</li>
+                        <li>LinkedIn - профессиональные связи и история работы</li>
+                        <li>Telegram - каналы, группы, публичные чаты</li>
+                    </ul>
+                    
+                    <p><strong>Методы анализа:</strong></p>
+                    <ul>
+                        <li>Анализ графа связей между пользователями</li>
+                        <li>Идентификация по фотографиям и аватарам</li>
+                        <li>Анализ поведенческих паттернов</li>
+                        <li>Кросс-платформенная корреляция аккаунтов</li>
+                        <li>Временной анализ активности</li>
+                    </ul>
+                    
+                    <div class="terminal-style">
+                        # Пример поиска по социальным сетям<br>
+                        python3 sherlock username<br>
+                        python3 social-analyzer -u username -p all
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="osint-modal" id="phone-modal">
+            <div class="osint-modal-content">
+                <button class="osint-modal-close" data-modal="phone">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="osint-modal-title">Phone OSINT</h2>
+                <div class="osint-modal-body">
+                    <p>Phone OSINT специализируется на исследовании телефонных номеров и связанной с ними информации.</p>
+                    
+                    <p><strong>Возможности:</strong></p>
+                    <ul>
+                        <li>Определение оператора и региона номера</li>
+                        <li>Поиск аккаунтов, привязанных к номеру</li>
+                        <li>Проверка на наличие в базах утечек</li>
+                        <li>Геолокация по данным вызовов (при наличии доступа)</li>
+                        <li>Анализ паттернов звонков и сообщений</li>
+                    </ul>
+                    
+                    <p><strong>Этические границы:</strong></p>
+                    <ul>
+                        <li>Использование только публичных баз данных</li>
+                        <li>Отказ от методов социальной инженерии</li>
+                        <li>Соблюдение законодательства о персональных данных</li>
+                        <li>Ограничение на коммерческое использование без согласия</li>
+                    </ul>
+                    
+                    <div class="terminal-style">
+                        # Проверка номера через открытые API<br>
+                        curl -X GET "https://api.opencagedata.com/geocode/v1/json?q=+79161234567"<br>
+                        python3 phoneinfoga -n +79161234567
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <section class="section" id="tools">
+            <h2 class="section-title">Инструменты <span class="text-gradient">OSINT</span></h2>
+            <p class="section-subtitle">Профессиональные инструменты для сбора и анализа информации из открытых источников.</p>
+            
+            <div class="tools-categories">
+                <button class="tool-category-btn active" data-category="all">Все</button>
+                <button class="tool-category-btn" data-category="username">Username</button>
+                <button class="tool-category-btn" data-category="phone">Phone</button>
+                <button class="tool-category-btn" data-category="email">Email</button>
+                <button class="tool-category-btn" data-category="image">Image</button>
+                <button class="tool-category-btn" data-category="network">Network</button>
+                <button class="tool-category-btn" data-category="darknet">Darknet</button>
+            </div>
+            
+            <div class="tools-grid">
+                <!-- Sherlock -->
+                <div class="tool-card" data-categories="username">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-user-ninja"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Sherlock</h3>
+                            <div class="osint-type-tags">
+                                <span class="osint-type-tag">Python</span>
+                                <span class="osint-type-tag">Username</span>
+                                <span class="osint-type-tag">Social</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tool-description">Поиск аккаунтов по username в сотнях социальных сетей и платформ. Автоматическая проверка наличия аккаунта с заданным именем пользователя.</p>
+                    <div class="tool-actions">
+                        <button class="tool-btn primary" data-tool="sherlock">HOW TO USE</button>
+                        <a href="https://github.com/sherlock-project/sherlock" target="_blank" class="tool-btn secondary">GitHub</a>
+                    </div>
+                    <div class="tool-expand-content" id="sherlock-content">
+                        <div class="tool-code-block">
+                            # Установка Sherlock<br>
+                            git clone https://github.com/sherlock-project/sherlock.git<br>
+                            cd sherlock<br>
+                            python3 -m pip install -r requirements.txt<br><br>
+                            # Базовое использование<br>
+                            python3 sherlock username<br><br>
+                            # Поиск нескольких пользователей<br>
+                            python3 sherlock user1 user2 user3<br><br>
+                            # Сохранение результатов в файл<br>
+                            python3 sherlock username --output results.txt
+                        </div>
+                        <p><strong>Особенности:</strong></p>
+                        <ul>
+                            <li>Поддержка 300+ социальных сетей</li>
+                            <li>Цветовой вывод результатов</li>
+                            <li>Настройка тайм-аутов и прокси</li>
+                            <li>Экспорт в JSON/CSV форматы</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- PhoneInfoga -->
+                <div class="tool-card" data-categories="phone">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">PhoneInfoga</h3>
+                            <div class="osint-type-tags">
+                                <span class="osint-type-tag">Go</span>
+                                <span class="osint-type-tag">Phone</span>
+                                <span class="osint-type-tag">Recon</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tool-description">Мощный инструмент для OSINT разведки телефонных номеров. Проверяет номера через открытые API и базы данных.</p>
+                    <div class="tool-actions">
+                        <button class="tool-btn primary" data-tool="phoneinfoga">HOW TO USE</button>
+                        <a href="https://github.com/sundowndev/phoneinfoga" target="_blank" class="tool-btn secondary">GitHub</a>
+                    </div>
+                    <div class="tool-expand-content" id="phoneinfoga-content">
+                        <div class="tool-code-block">
+                            # Запуск через Docker<br>
+                            docker run -it sundowndev/phoneinfoga scan -n +79161234567<br><br>
+                            # Установка из исходников<br>
+                            git clone https://github.com/sundowndev/phoneinfoga<br>
+                            cd phoneinfoga<br>
+                            go build<br><br>
+                            # Сканирование номера<br>
+                            ./phoneinfoga scan -n +79161234567<br><br>
+                            # Использование прокси<br>
+                            ./phoneinfoga scan -n +79161234567 -p http://proxy:8080
+                        </div>
+                        <p><strong>Возможности:</strong></p>
+                        <ul>
+                            <li>Определение страны и оператора</li>
+                            <li>Поиск в социальных сетях</li>
+                            <li>Проверка на утечки</li>
+                            <li>Валидация формата номера</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- theHarvester -->
+                <div class="tool-card" data-categories="email,network">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">theHarvester</h3>
+                            <div class="osint-type-tags">
+                                <span class="osint-type-tag">Python</span>
+                                <span class="osint-type-tag">Email</span>
+                                <span class="osint-type-tag">Subdomain</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tool-description">Сбор электронных писем, поддоменов, IP-адресов и URL из публичных источников для этапа разведки.</p>
+                    <div class="tool-actions">
+                        <button class="tool-btn primary" data-tool="harvester">HOW TO USE</button>
+                        <a href="https://github.com/laramies/theHarvester" target="_blank" class="tool-btn secondary">GitHub</a>
+                    </div>
+                    <div class="tool-expand-content" id="harvester-content">
+                        <div class="tool-code-block">
+                            # Установка<br>
+                            git clone https://github.com/laramies/theHarvester.git<br>
+                            cd theHarvester<br>
+                            pip3 install -r requirements.txt<br><br>
+                            # Базовый поиск<br>
+                            python3 theHarvester.py -d example.com -b all<br><br>
+                            # Поиск только email<br>
+                            python3 theHarvester.py -d example.com -b google -e<br><br>
+                            # Сохранение результатов<br>
+                            python3 theHarvester.py -d example.com -b all -f results.html
+                        </div>
+                        <p><strong>Источники данных:</strong></p>
+                        <ul>
+                            <li>Google, Bing, Yahoo поиск</li>
+                            <li>LinkedIn, Twitter, PGP ключи</li>
+                            <li>Shodan, VirusTotal, ThreatCrowd</li>
+                            <li>DNSdumpster, Netcraft, SSL сертификаты</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Maltego -->
+                <div class="tool-card" data-categories="username,network">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Maltego</h3>
+                            <div class="osint-type-tags">
+                                <span class="osint-type-tag">GUI</span>
+                                <span class="osint-type-tag">Visualization</span>
+                                <span class="osint-type-tag">Analysis</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tool-description">Платформа для анализа и визуализации связей между различными сущностями в OSINT расследованиях.</p>
+                    <div class="tool-actions">
+                        <button class="tool-btn primary" data-tool="maltego">HOW TO USE</button>
+                        <a href="https://www.maltego.com/" target="_blank" class="tool-btn secondary">Website</a>
+                    </div>
+                    <div class="tool-expand-content" id="maltego-content">
+                        <div class="tool-code-block">
+                            # Maltego использует графический интерфейс<br>
+                            # Основные этапы работы:<br>
+                            1. Установка и настройка трансформов<br>
+                            2. Добавление начальной сущности (домен, email, имя)<br>
+                            3. Запуск трансформов для сбора данных<br>
+                            4. Визуализация связей между сущностями<br>
+                            5. Экспорт результатов в отчет<br><br>
+                            # Популярные трансформы:<br>
+                            - DNS трансформы<br>
+                            - Социальные сети<br>
+                            - Геолокационные данные<br>
+                            - Криминалистический анализ
+                        </div>
+                        <p><strong>Преимущества:</strong></p>
+                        <ul>
+                            <li>Мощная визуализация связей</li>
+                            <li>Большая библиотека трансформов</li>
+                            <li>Поддержка кастомных расширений</li>
+                            <li>Интеграция с другими инструментами</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- ExifTool -->
+                <div class="tool-card" data-categories="image">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">ExifTool</h3>
+                            <div class="osint-type-tags">
+                                <span class="osint-type-tag">Perl</span>
+                                <span class="osint-type-tag">Metadata</span>
+                                <span class="osint-type-tag">Forensics</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tool-description">Чтение, запись и редактирование метаданных в изображениях, аудио и видео файлах.</p>
+                    <div class="tool-actions">
+                        <button class="tool-btn primary" data-tool="exiftool">HOW TO USE</button>
+                        <a href="https://exiftool.org/" target="_blank" class="tool-btn secondary">Website</a>
+                    </div>
+                    <div class="tool-expand-content" id="exiftool-content">
+                        <div class="tool-code-block">
+                            # Просмотр всех метаданных<br>
+                            exiftool image.jpg<br><br>
+                            # Просмотр конкретных тегов<br>
+                            exiftool -T -filename -createdate -GPSPosition image.jpg<br><br>
+                            # Удаление метаданных<br>
+                            exiftool -all= image.jpg<br><br>
+                            # Экспорт метаданных в JSON<br>
+                            exiftool -json image.jpg > metadata.json<br><br>
+                            # Пакетная обработка<br>
+                            exiftool -ext jpg -GPSLatitude -GPSLongitude .
+                        </div>
+                        <p><strong>Анализируемые данные:</strong></p>
+                        <ul>
+                            <li>EXIF данные камеры</li>
+                            <li>Геолокационные координаты</li>
+                            <li>Дата и время съемки</li>
+                            <li>Информация об авторских правах</li>
+                            <li>Технические параметры файла</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Recon-ng -->
+                <div class="tool-card" data-categories="network,email">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Recon-ng</h3>
+                            <div class="osint-type-tags">
+                                <span class="osint-type-tag">Python</span>
+                                <span class="osint-type-tag">Recon</span>
+                                <span class="osint-type-tag">Framework</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tool-description">Полнофункциональный фреймворк для веб-рекогносцировки с модульной архитектурой.</p>
+                    <div class="tool-actions">
+                        <button class="tool-btn primary" data-tool="reconng">HOW TO USE</button>
+                        <a href="https://github.com/lanmaster53/recon-ng" target="_blank" class="tool-btn secondary">GitHub</a>
+                    </div>
+                    <div class="tool-expand-content" id="reconng-content">
+                        <div class="tool-code-block">
+                            # Запуск Recon-ng<br>
+                            recon-ng<br><br>
+                            # Установка модулей<br>
+                            marketplace install all<br><br>
+                            # Добавление домена в рабочее пространство<br>
+                            workspaces create example<br>
+                            db insert domains<br>
+                            example.com<br><br>
+                            # Запуск модулей<br>
+                            modules load recon/domains-hosts/hackertarget<br>
+                            run<br><br>
+                            # Просмотр результатов<br>
+                            show hosts
+                        </div>
+                        <p><strong>Ключевые модули:</strong></p>
+                        <ul>
+                            <li>Сбор поддоменов</li>
+                            <li>Поиск email адресов</li>
+                            <li>Анализ сотрудников компании</li>
+                            <li>Сканирование портов</li>
+                            <li>Поиск в соцсетях</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guides Section -->
+        <section class="section" id="guides">
+            <h2 class="section-title">Гайды и <span class="text-gradient">Инструкции</span></h2>
+            <p class="section-subtitle">Пошаговые руководства по использованию OSINT инструментов и методологий.</p>
+            
+            <div class="guides-container">
+                <div class="guide-accordion">
+                    <div class="guide-accordion-header">
+                        <h3 class="guide-accordion-title">Базовый OSINT пайплайн</h3>
+                        <i class="fas fa-chevron-down guide-accordion-icon"></i>
+                    </div>
+                    <div class="guide-accordion-content">
+                        <div class="guide-content">
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Шаг 1: Определение цели</h4>
+                                <p class="guide-step-content">Четко сформулируйте, что именно вы ищете. Это может быть информация о человеке, компании, событии или цифровом следе.</p>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Шаг 2: Сбор открытых данных</h4>
+                                <p class="guide-step-content">Используйте поисковые системы, социальные сети, публичные базы данных и специализированные инструменты для сбора информации.</p>
+                                <div class="guide-code-block">
+                                    # Пример сбора данных о домене<br>
+                                    theHarvester -d target.com -b all<br>
+                                    subfinder -d target.com<br>
+                                    assetfinder --subs-only target.com
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Шаг 3: Анализ и корреляция</h4>
+                                <p class="guide-step-content">Собранные данные нужно проанализировать, выявить связи и закономерности, отделить важную информацию от шума.</p>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Шаг 4: Визуализация</h4>
+                                <p class="guide-step-content">Представьте результаты в наглядном виде: графы связей, временные линии, карты географических данных.</p>
+                                <div class="guide-code-block">
+                                    # Создание графа связей в Maltego<br>
+                                    1. Импорт собранных данных<br>
+                                    2. Настройка трансформов для анализа связей<br>
+                                    3. Визуализация графа<br>
+                                    4. Экспорт в отчет
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Шаг 5: Формирование отчета</h4>
+                                <p class="guide-step-content">Структурируйте найденную информацию в отчет, который будет понятен заказчику или для дальнейшего использования.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-accordion">
+                    <div class="guide-accordion-header">
+                        <h3 class="guide-accordion-title">Поиск цифрового следа по email</h3>
+                        <i class="fas fa-chevron-down guide-accordion-icon"></i>
+                    </div>
+                    <div class="guide-accordion-content">
+                        <div class="guide-content">
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Проверка на утечки</h4>
+                                <p class="guide-step-content">Используйте сервисы проверки email на участие в утечках данных.</p>
+                                <div class="guide-code-block">
+                                    # Использование HaveIBeenPwned<br>
+                                    curl -H "hibp-api-key: YOUR_KEY" \<br>
+                                    https://haveibeenpwned.com/api/v3/breachedaccount/email@example.com<br><br>
+                                    # Альтернатива - использование DeHashed<br>
+                                    # Требуется API ключ
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Поиск связанных аккаунтов</h4>
+                                <p class="guide-step-content">Найдите аккаунты в социальных сетях и сервисах, привязанные к email.</p>
+                                <div class="guide-code-block">
+                                    # Использование Holehe<br>
+                                    pip install holehe<br>
+                                    holehe email@example.com<br><br>
+                                    # Использование Sherlock<br>
+                                    python3 sherlock email@example.com<br><br>
+                                    # Проверка через социальные графы
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Анализ метаданных</h4>
+                                <p class="guide-step-content">Если у вас есть доступ к письмам, можно проанализировать их метаданные.</p>
+                                <div class="guide-code-block">
+                                    # Анализ заголовков email<br>
+                                    1. Получить исходный код письма (.eml)<br>
+                                    2. Искать поля:<br>
+                                       - Received: от серверов пересылки<br>
+                                       - Message-ID: уникальный идентификатор<br>
+                                       - X-Mailer: клиент для отправки<br>
+                                       - X-Originating-IP: IP отправителя<br><br>
+                                    # Инструменты:<br>
+                                    mxtoolbox.com - анализ DNS записей<br>
+                                    mailheader.org - анализ заголовков
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-accordion">
+                    <div class="guide-accordion-header">
+                        <h3 class="guide-accordion-title">Геолокационный OSINT</h3>
+                        <i class="fas fa-chevron-down guide-accordion-icon"></i>
+                    </div>
+                    <div class="guide-accordion-content">
+                        <div class="guide-content">
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Анализ EXIF данных</h4>
+                                <p class="guide-step-content">Извлечение координат GPS из фотографий.</p>
+                                <div class="guide-code-block">
+                                    # Использование ExifTool<br>
+                                    exiftool -GPSLatitude -GPSLongitude image.jpg<br><br>
+                                    # Если координаты в градусах/минутах/секундах<br>
+                                    exiftool -c "%.6f" -GPSPosition image.jpg<br><br>
+                                    # Удаление геотегов<br>
+                                    exiftool -GPS*= image.jpg
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Анализ социальных медиа</h4>
+                                <p class="guide-step-content">Поиск геотегов в постах социальных сетей.</p>
+                                <div class="guide-code-block">
+                                    # Инструменты для анализа:<br>
+                                    - SocialMapper: анализ соцсетей с геоданными<br>
+                                    - Twint: сбор твитов с геотегами<br>
+                                    - Instaloader: загрузка постов Instagram<br><br>
+                                    # Пример с Twint<br>
+                                    twint -u username --near "city"<br>
+                                    twint -s "keyword" --near "51.5074,0.1278" --radius 10km
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <h4 class="guide-step-title">Спутниковые снимки</h4>
+                                <p class="guide-step-content">Использование картографических сервисов для анализа местности.</p>
+                                <div class="guide-code-block">
+                                    # Сервисы для анализа:<br>
+                                    - Google Earth Pro (бесплатный)<br>
+                                    - Sentinel Hub (спутниковые снимки)<br>
+                                    - Planet Labs (коммерческий)<br>
+                                    - USGS EarthExplorer (научные данные)<br><br>
+                                    # Методика анализа:<br>
+                                    1. Загрузка координат в Google Earth<br>
+                                    2. Анализ исторических снимков<br>
+                                    3. Идентификация объектов<br>
+                                    4. Сравнение изменений во времени
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hacking Section -->
+        <section class="section" id="hacking">
+            <h2 class="section-title">Методологии <span class="text-gradient">Hacking</span></h2>
+            <p class="section-subtitle">Изучение методов разведки, анализа уязвимостей и защиты систем.</p>
+            
+            <div class="hacking-tabs">
+                <button class="hacking-tab active" data-tab="recon">Reconnaissance</button>
+                <button class="hacking-tab" data-tab="opsec">OPSEC</button>
+                <button class="hacking-tab" data-tab="mindset">Mindset</button>
+                <button class="hacking-tab" data-tab="defense">Defense</button>
+            </div>
+            
+            <div class="hacking-tab-content active" id="recon-tab">
+                <div class="hacking-grid">
+                    <div class="hacking-card">
+                        <h3 class="hacking-card-title">Пассивная разведка</h3>
+                        <p class="hacking-card-desc">Сбор информации без прямого взаимодействия с целевой системой. Использование открытых источников, поисковых систем, архивов.</p>
+                    </div>
+                    <div class="hacking-card">
+                        <h3 class="hacking-card-title">Активная разведка</h3>
+                        <p class="hacking-card-desc">Неинтрузивное сканирование сетей, DNS запросы, анализ сервисов. Определение инфраструктуры без эксплуатации уязвимостей.</p>
+                    </div>
+                    <div class="hacking-card">
+                        <h3 class="hacking-card-title">Социальная инженерия</h3>
+                        <p class="hacking-card-desc">Анализ человеческого фактора. Изучение сотрудников, их связей, привычек и потенциальных векторов атаки.</p>
+                    </div>
+                </div>
+                
+                <div class="hacking-diagram">
+                    <svg class="hacking-svg" viewBox="0 0 800 400">
+                        <!-- Simplified Kill Chain Diagram -->
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#00ff9c"/>
+                            </marker>
+                        </defs>
+                        
+                        <!-- Reconnaissance -->
+                        <rect x="50" y="150" width="120" height="60" rx="5" fill="#111917" stroke="#00ff9c" stroke-width="2"/>
+                        <text x="110" y="185" text-anchor="middle" fill="#00ff9c" font-family="IBM Plex Mono" font-size="14">Recon</text>
+                        
+                        <!-- Weaponization -->
+                        <rect x="220" y="150" width="120" height="60" rx="5" fill="#111917" stroke="#00ff9c" stroke-width="2"/>
+                        <text x="280" y="185" text-anchor="middle" fill="#00ff9c" font-family="IBM Plex Mono" font-size="14">Weaponization</text>
+                        
+                        <!-- Delivery -->
+                        <rect x="390" y="150" width="120" height="60" rx="5" fill="#111917" stroke="#00ff9c" stroke-width="2"/>
+                        <text x="450" y="185" text-anchor="middle" fill="#00ff9c" font-family="IBM Plex Mono" font-size="14">Delivery</text>
+                        
+                        <!-- Exploitation -->
+                        <rect x="560" y="150" width="120" height="60" rx="5" fill="#111917" stroke="#00ff9c" stroke-width="2"/>
+                        <text x="620" y="185" text-anchor="middle" fill="#00ff9c" font-family="IBM Plex Mono" font-size="14">Exploitation</text>
+                        
+                        <!-- Arrows -->
+                        <line x1="170" y1="180" x2="220" y2="180" stroke="#00ff9c" stroke-width="2" marker-end="url(#arrow)"/>
+                        <line x1="340" y1="180" x2="390" y2="180" stroke="#00ff9c" stroke-width="2" marker-end="url(#arrow)"/>
+                        <line x1="510" y1="180" x2="560" y2="180" stroke="#00ff9c" stroke-width="2" marker-end="url(#arrow)"/>
+                        
+                        <!-- Title -->
+                        <text x="400" y="100" text-anchor="middle" fill="#e6fef3" font-family="IBM Plex Mono" font-size="20" font-weight="bold">Cyber Kill Chain</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="hacking-tab-content" id="opsec-tab">
+                <div class="hacking-grid">
+                    <div class="hacking-card">
+                        <h3 class="hacking-card-title">Анонимность в сети</h3>
+                        <p class="hacking-card-desc">Использование VPN, Tor, прокси. Управление цифровым следом. Избегание идентификации по поведенческим паттернам.</p>
+                    </div>
+                    <div class="hacking-card">
+                        <h3 class="hacking-card-title">Безопасная коммуникация</h3>
+                        <p class="hacking-card-desc">Шифрование трафика, использование защищенных протоколов. OTR для мессенджеров, PGP для email.</p>
+                    </div>
+                    <div class="hacking-card">
+                        <h3 class="hacking-card-title">Управление идентификацией</h3>
+                        <p class="hacking-card-desc">Создание и поддержание отдельных идентичностей для разных активностей. Контроль cross-platform корреляции.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Telegram Section -->
+        <section class="section telegram-section" id="telegram">
+            <div class="telegram-container">
+                <div class="telegram-content">
+                    <h2 class="telegram-title">Telegram <span>Канал</span></h2>
+                    <p class="telegram-desc">Присоединяйтесь к нашему Telegram каналу для получения обновлений, новых инструментов, гайдов и эксклюзивных материалов по OSINT.</p>
+                    
+                    <ul class="telegram-features">
+                        <li class="telegram-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Ежедневные обновления и новости</span>
+                        </li>
+                        <li class="telegram-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Эксклюзивные инструменты и скрипты</span>
+                        </li>
+                        <li class="telegram-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Гайды и обучающие материалы</span>
+                        </li>
+                        <li class="telegram-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Поддержка и ответы на вопросы</span>
+                        </li>
+                        <li class="telegram-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Сообщество единомышленников</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="https://t.me/erafox" target="_blank" class="telegram-btn">
+                        <i class="fab fa-telegram-plane"></i>
+                        ПРИСОЕДИНИТЬСЯ К КАНАЛУ
+                    </a>
+                </div>
+                
+                <div class="telegram-visual">
+                    <div class="telegram-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="section" id="pricing">
+            <h2 class="section-title">Тарифные <span class="text-gradient">Планы</span></h2>
+            <p class="section-subtitle">Выберите подходящий план для доступа к эксклюзивным материалам и поддержке.</p>
+            
+            <div class="pricing-plans">
+                <div class="pricing-card">
+                    <div class="pricing-title">Free</div>
+                    <div class="pricing-price">$0<span class="pricing-period">/месяц</span></div>
+                    <ul class="pricing-features">
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Базовые инструменты OSINT</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Доступ к публичным гайдам</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Обновления в Telegram</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-times"></i>
+                            <span>Эксклюзивные материалы</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-times"></i>
+                            <span>Персональная поддержка</span>
+                        </li>
+                    </ul>
+                    <a href="https://t.me/erafox" target="_blank" class="pricing-btn secondary">ПРИСОЕДИНИТЬСЯ</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">ПОПУЛЯРНЫЙ</div>
+                    <div class="pricing-title">Pro</div>
+                    <div class="pricing-price">$29<span class="pricing-period">/месяц</span></div>
+                    <ul class="pricing-features">
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Все возможности Free тарифа</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Эксклюзивные инструменты</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Приватные гайды и методики</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Персональная поддержка</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Доступ к базам данных</span>
+                        </li>
+                    </ul>
+                    <a href="https://t.me/erafox" target="_blank" class="pricing-btn primary">КУПИТЬ В ТЕЛЕГРАМ</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-title">Enterprise</div>
+                    <div class="pricing-price">$99<span class="pricing-period">/месяц</span></div>
+                    <ul class="pricing-features">
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Все возможности Pro тарифа</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Кастомные инструменты</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Обучение команды</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Приоритетная поддержка 24/7</span>
+                        </li>
+                        <li class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Консультации по проектам</span>
+                        </li>
+                    </ul>
+                    <a href="https://t.me/erafox" target="_blank" class="pricing-btn secondary">СВЯЗАТЬСЯ</a>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-links-column">
-                    <h4>Help & Contact</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Security</a></li>
-                        <li><a href="#">Dispute Resolution Center</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-column">
-                    <h4>PayPal</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">News</a></li>
-                        <li><a href="#">Jobs</a></li>
-                        <li><a href="#">Investors</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-column">
-                    <h4>Merchants</h4>
-                    <ul>
-                        <li><a href="#">Sell with PayPal</a></li>
-                        <li><a href="#">Business Account</a></li>
-                        <li><a href="#">Partners</a></li>
-                        <li><a href="#">Payment Solutions</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-column">
-                    <h4>Developers</h4>
-                    <ul>
-                        <li><a href="#">PayPal for Developers</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Integrations</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-column">
-                    <h4>Follow Us</h4>
-                    <ul>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">LinkedIn</a></li>
-                        <li><a href="#">Instagram</a></li>
-                    </ul>
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">RE:OSINT</div>
+                <p class="footer-text">
+                    Профессиональная платформа для оперативной разведки открытых источников. 
+                    Инструменты, методологии и знания для этичного исследования цифрового пространства.
+                </p>
+                <div class="social-links">
+                    <a href="https://t.me/erafox" target="_blank" class="social-link">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
                 </div>
             </div>
             
-            <div class="language-selector">
-                <select>
-                    <option value="en">English</option>
-                    <option value="de">Deutsch</option>
-                    <option value="fr">Français</option>
-                    <option value="es">Español</option>
-                </select>
+            <div class="footer-links">
+                <h4>Разделы</h4>
+                <ul>
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#osint">OSINT</a></li>
+                    <li><a href="#tools">Инструменты</a></li>
+                    <li><a href="#guides">Гайды</a></li>
+                    <li><a href="#hacking">Hacking</a></li>
+                </ul>
             </div>
             
-            <div class="copyright">
-                <p>Copyright © 1999–2023 PayPal. All rights reserved.</p>
-                <p>PayPal Pte. Ltd. is a licensed payment system operator in Singapore.</p>
+            <div class="footer-links">
+                <h4>Инструменты</h4>
+                <ul>
+                    <li><a href="#tools" data-tool="sherlock">Sherlock</a></li>
+                    <li><a href="#tools" data-tool="phoneinfoga">PhoneInfoga</a></li>
+                    <li><a href="#tools" data-tool="harvester">theHarvester</a></li>
+                    <li><a href="#tools" data-tool="maltego">Maltego</a></li>
+                    <li><a href="#tools" data-tool="exiftool">ExifTool</a></li>
+                </ul>
             </div>
+            
+            <div class="footer-contact">
+                <h4>Контакты</h4>
+                <p class="footer-text">
+                    <i class="fab fa-telegram"></i> 
+                    <a href="https://t.me/erafox" target="_blank" style="color: var(--accent-primary);">@erafox</a>
+                </p>
+                <p class="footer-text">
+                    <i class="fas fa-envelope"></i> 
+                    contact@re-osint.ru
+                </p>
+                <p class="footer-text">
+                    <i class="fas fa-shield-alt"></i> 
+                    Только для этичного использования
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 RE:OSINT Platform. Все права защищены.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                Информация предоставлена в образовательных целях. Используйте инструменты ответственно и в рамках законодательства.
+            </p>
         </div>
     </footer>
 
+    <!-- Keyboard Shortcuts UI -->
+    <div class="keyboard-shortcuts" id="keyboard-shortcuts">
+        <div class="shortcuts-header">
+            <h3 class="shortcuts-title">Горячие клавиши</h3>
+            <button class="shortcuts-close" id="shortcuts-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="shortcut-item">
+            <div class="shortcut-key">ESC</div>
+            <div class="shortcut-desc">Закрыть модальное окно</div>
+        </div>
+        <div class="shortcut-item">
+            <div class="shortcut-key">H</div>
+            <div class="shortcut-desc">Перейти на главную</div>
+        </div>
+        <div class="shortcut-item">
+            <div class="shortcut-key">T</div>
+            <div class="shortcut-desc">Перейти к инструментам</div>
+        </div>
+        <div class="shortcut-item">
+            <div class="shortcut-key">G</div>
+            <div class="shortcut-desc">Перейти к гайдам</div>
+        </div>
+        <div class="shortcut-item">
+            <div class="shortcut-key">?</div>
+            <div class="shortcut-desc">Показать это окно</div>
+        </div>
+    </div>
+
+    <div class="shortcut-hint" id="shortcut-hint">
+        <i class="fas fa-keyboard"></i> Нажмите ? для горячих клавиш
+    </div>
+
+    <!-- JavaScript -->
     <script>
-        // Toggle password visibility
-        document.querySelectorAll('.toggle-password').forEach(button => {
-            button.addEventListener('click', function() {
-                const input = this.parentElement.querySelector('input');
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    this.textContent = 'Hide';
+        // ===== GLOBAL STATE MANAGER =====
+        const AppState = {
+            currentSection: 'home',
+            theme: 'dark',
+            toolsExpanded: {},
+            guidesExpanded: {},
+            shortcutsVisible: false,
+            mobileMenuOpen: false,
+            osintModals: {},
+            preloaderShown: false,
+            
+            init() {
+                this.loadFromStorage();
+                this.setupEventListeners();
+            },
+            
+            loadFromStorage() {
+                const savedState = localStorage.getItem('reosint_state');
+                if (savedState) {
+                    const parsed = JSON.parse(savedState);
+                    this.toolsExpanded = parsed.toolsExpanded || {};
+                    this.guidesExpanded = parsed.guidesExpanded || {};
+                }
+            },
+            
+            saveToStorage() {
+                const state = {
+                    toolsExpanded: this.toolsExpanded,
+                    guidesExpanded: this.guidesExpanded
+                };
+                localStorage.setItem('reosint_state', JSON.stringify(state));
+            },
+            
+            setupEventListeners() {
+                // Save state before page unload
+                window.addEventListener('beforeunload', () => this.saveToStorage());
+            }
+        };
+
+        // ===== PRELOADER =====
+        function initPreloader() {
+            const preloader = document.getElementById('preloader');
+            const loadingProgress = document.getElementById('loading-progress');
+            const terminalBody = document.querySelector('.terminal-body');
+            const finalCommand = document.getElementById('final-command');
+            
+            if (!preloader) return;
+            
+            // Simulate loading progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+                loadingProgress.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Add final command
+                    setTimeout(() => {
+                        finalCommand.textContent = 'start_web_interface --now';
+                        finalCommand.classList.add('terminal-command');
+                        
+                        // Fade out preloader
+                        setTimeout(() => {
+                            preloader.classList.add('fade-out');
+                            document.body.classList.remove('fade-out');
+                            AppState.preloaderShown = true;
+                            
+                            // Remove preloader from DOM after animation
+                            setTimeout(() => {
+                                preloader.style.display = 'none';
+                                initMainApp();
+                            }, 1000);
+                        }, 1000);
+                    }, 500);
+                }
+            }, 200);
+            
+            // Add some terminal output dynamically
+            setTimeout(() => {
+                const output = document.createElement('div');
+                output.className = 'terminal-output';
+                output.textContent = '✓ Core modules loaded successfully';
+                output.classList.add('success');
+                terminalBody.appendChild(output);
+            }, 800);
+            
+            setTimeout(() => {
+                const output = document.createElement('div');
+                output.className = 'terminal-output';
+                output.textContent = '✓ Darknet nodes connected (3/5)';
+                output.classList.add('success');
+                terminalBody.appendChild(output);
+            }, 1500);
+            
+            setTimeout(() => {
+                const output = document.createElement('div');
+                output.className = 'terminal-output';
+                output.textContent = '✓ Security protocols engaged';
+                output.classList.add('success');
+                terminalBody.appendChild(output);
+            }, 2200);
+        }
+
+        // ===== PARTICLE SYSTEM =====
+        function initParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    width: ${Math.random() * 4 + 1}px;
+                    height: ${Math.random() * 4 + 1}px;
+                    background-color: rgba(0, 255, 156, ${Math.random() * 0.3 + 0.1});
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation: float ${Math.random() * 20 + 10}s infinite linear;
+                    animation-delay: ${Math.random() * 5}s;
+                    opacity: ${Math.random() * 0.5 + 0.1};
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // ===== CUSTOM CURSOR =====
+        function initCustomCursor() {
+            const cursor = document.getElementById('cursor');
+            if (!cursor) return;
+            
+            let mouseX = 0;
+            let mouseY = 0;
+            let cursorX = 0;
+            let cursorY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            function updateCursor() {
+                cursorX += (mouseX - cursorX) * 0.1;
+                cursorY += (mouseY - cursorY) * 0.1;
+                
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                
+                requestAnimationFrame(updateCursor);
+            }
+            
+            updateCursor();
+            
+            // Hide cursor on elements that don't need it
+            const noCursorElements = document.querySelectorAll('button, a, input, .tool-card, .osint-type-card');
+            noCursorElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.opacity = '0.1';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.opacity = '1';
+                });
+            });
+        }
+
+        // ===== SMOOTH SCROLL =====
+        function initSmoothScroll() {
+            // Handle anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Update active nav link
+                        updateActiveNavLink(targetId.substring(1));
+                        
+                        // Scroll to element
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (AppState.mobileMenuOpen) {
+                            closeMobileMenu();
+                        }
+                    }
+                });
+            });
+            
+            // Handle mobile menu links
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const section = this.getAttribute('data-section');
+                    const targetElement = document.getElementById(section);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                        
+                        closeMobileMenu();
+                        updateActiveNavLink(section);
+                    }
+                });
+            });
+            
+            // Handle tool links in footer
+            document.querySelectorAll('[data-tool]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const toolId = this.getAttribute('data-tool');
+                    const toolsSection = document.getElementById('tools');
+                    const toolButton = document.querySelector(`[data-tool="${toolId}"]`);
+                    
+                    if (toolsSection && toolButton) {
+                        // Scroll to tools section
+                        window.scrollTo({
+                            top: toolsSection.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Expand the tool content
+                        setTimeout(() => {
+                            toolButton.click();
+                        }, 500);
+                    }
+                });
+            });
+        }
+
+        // ===== HEADER SCROLL EFFECT =====
+        function initHeaderScroll() {
+            const header = document.getElementById('main-header');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                // Add/remove scrolled class based on scroll position
+                if (currentScroll > 50) {
+                    header.classList.add('scrolled');
                 } else {
-                    input.type = 'password';
-                    this.textContent = 'Show';
+                    header.classList.remove('scrolled');
+                }
+                
+                // Update active nav link based on scroll position
+                updateActiveNavOnScroll();
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // ===== MOBILE MENU =====
+        function initMobileMenu() {
+            const toggleBtn = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (!toggleBtn || !mobileMenu) return;
+            
+            toggleBtn.addEventListener('click', openMobileMenu);
+            closeBtn.addEventListener('click', closeMobileMenu);
+            
+            // Close menu when clicking on overlay
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target === mobileMenu) {
+                    closeMobileMenu();
                 }
             });
-        });
+            
+            // Close menu with ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && AppState.mobileMenuOpen) {
+                    closeMobileMenu();
+                }
+            });
+        }
+        
+        function openMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.add('active');
+            AppState.mobileMenuOpen = true;
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.remove('active');
+            AppState.mobileMenuOpen = false;
+            document.body.style.overflow = '';
+        }
 
-        // Form submission handler
-        document.getElementById('registration-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // ===== ACTIVE NAV LINK MANAGEMENT =====
+        function updateActiveNavLink(sectionId) {
+            // Update desktop nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
+                }
+            });
             
-            // Collect form data
-            const formData = new FormData(this);
-            const data = {};
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
+            // Update state
+            AppState.currentSection = sectionId;
+        }
+        
+        function updateActiveNavOnScroll() {
+            const sections = document.querySelectorAll('section[id]');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = sectionId;
+                }
+            });
+            
+            if (currentSection) {
+                updateActiveNavLink(currentSection);
             }
+        }
+
+        // ===== OSINT MODALS =====
+        function initOSINTModals() {
+            // Get all modal triggers
+            const modalTriggers = document.querySelectorAll('.osint-type-card');
+            const modalCloseButtons = document.querySelectorAll('.osint-modal-close');
             
-            // Add timestamp
-            data.timestamp = new Date().toISOString();
+            // Open modal on card click
+            modalTriggers.forEach(card => {
+                card.addEventListener('click', () => {
+                    const modalId = card.getAttribute('data-modal');
+                    openOSINTModal(modalId);
+                });
+            });
             
-            // Add cookies information
-            data.cookies = document.cookie;
+            // Close modal on close button click
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal');
+                    closeOSINTModal(modalId);
+                });
+            });
             
-            // Add browser information
-            data.userAgent = navigator.userAgent;
-            data.language = navigator.language;
-            data.platform = navigator.platform;
+            // Close modal on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeAllOSINTModals();
+                }
+            });
             
-            // Save data to localStorage as backup
-            localStorage.setItem('paypalFormData', JSON.stringify(data));
+            // Close modal on background click
+            document.querySelectorAll('.osint-modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        const modalId = modal.id.replace('-modal', '');
+                        closeOSINTModal(modalId);
+                    }
+                });
+            });
+        }
+        
+        function openOSINTModal(modalId) {
+            const modal = document.getElementById(`${modalId}-modal`);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                AppState.osintModals[modalId] = true;
+            }
+        }
+        
+        function closeOSINTModal(modalId) {
+            const modal = document.getElementById(`${modalId}-modal`);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                delete AppState.osintModals[modalId];
+            }
+        }
+        
+        function closeAllOSINTModals() {
+            document.querySelectorAll('.osint-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = '';
+            AppState.osintModals = {};
+        }
+
+        // ===== TOOLS SECTION =====
+        function initToolsSection() {
+            // Tool category filtering
+            const categoryButtons = document.querySelectorAll('.tool-category-btn');
+            const toolCards = document.querySelectorAll('.tool-card');
             
-            // Create and download data file
-            const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `paypal_data_${Date.now()}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    const category = button.getAttribute('data-category');
+                    
+                    // Filter tool cards
+                    toolCards.forEach(card => {
+                        const categories = card.getAttribute('data-categories');
+                        
+                        if (category === 'all' || categories.includes(category)) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 10);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
             
-            // Show error message
-            document.getElementById('errorMessage').style.display = 'block';
+            // Tool expand/collapse
+            const toolExpandButtons = document.querySelectorAll('[data-tool]');
             
-            // Redirect to real PayPal after 3 seconds
+            toolExpandButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    const toolId = button.getAttribute('data-tool');
+                    const content = document.getElementById(`${toolId}-content`);
+                    
+                    if (content) {
+                        const isActive = content.classList.contains('active');
+                        
+                        // Close all other tool contents
+                        document.querySelectorAll('.tool-expand-content').forEach(el => {
+                            el.classList.remove('active');
+                        });
+                        
+                        // Toggle current content
+                        if (!isActive) {
+                            content.classList.add('active');
+                            AppState.toolsExpanded[toolId] = true;
+                        } else {
+                            content.classList.remove('active');
+                            delete AppState.toolsExpanded[toolId];
+                        }
+                        
+                        // Save state
+                        AppState.saveToStorage();
+                    }
+                });
+            });
+            
+            // Restore expanded tools from state
+            Object.keys(AppState.toolsExpanded).forEach(toolId => {
+                const content = document.getElementById(`${toolId}-content`);
+                if (content) {
+                    content.classList.add('active');
+                }
+            });
+        }
+
+        // ===== GUIDES SECTION =====
+        function initGuidesSection() {
+            const accordionHeaders = document.querySelectorAll('.guide-accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const isActive = content.classList.contains('active');
+                    
+                    // Close all other accordions
+                    document.querySelectorAll('.guide-accordion-content').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    document.querySelectorAll('.guide-accordion-header').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    
+                    // Toggle current accordion
+                    if (!isActive) {
+                        content.classList.add('active');
+                        header.classList.add('active');
+                    }
+                });
+            });
+            
+            // Restore expanded guides from state
+            Object.keys(AppState.guidesExpanded).forEach(guideId => {
+                // Implementation depends on how guides are structured
+            });
+        }
+
+        // ===== HACKING TABS =====
+        function initHackingTabs() {
+            const tabButtons = document.querySelectorAll('.hacking-tab');
+            const tabContents = document.querySelectorAll('.hacking-tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Update active button
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        function initKeyboardShortcuts() {
+            const shortcutsPanel = document.getElementById('keyboard-shortcuts');
+            const shortcutsClose = document.getElementById('shortcuts-close');
+            const shortcutHint = document.getElementById('shortcut-hint');
+            
+            if (!shortcutsPanel) return;
+            
+            // Toggle shortcuts panel with ? key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    toggleShortcutsPanel();
+                }
+                
+                // Navigation shortcuts
+                if (!e.ctrlKey && !e.metaKey) {
+                    switch(e.key.toLowerCase()) {
+                        case 'h':
+                            e.preventDefault();
+                            scrollToSection('home');
+                            break;
+                        case 't':
+                            e.preventDefault();
+                            scrollToSection('tools');
+                            break;
+                        case 'g':
+                            e.preventDefault();
+                            scrollToSection('guides');
+                            break;
+                        case 'escape':
+                            closeAllOSINTModals();
+                            if (AppState.shortcutsVisible) {
+                                toggleShortcutsPanel();
+                            }
+                            break;
+                    }
+                }
+            });
+            
+            // Close shortcuts panel
+            shortcutsClose.addEventListener('click', () => {
+                toggleShortcutsPanel();
+            });
+            
+            // Close shortcuts panel on background click
+            shortcutsPanel.addEventListener('click', (e) => {
+                if (e.target === shortcutsPanel) {
+                    toggleShortcutsPanel();
+                }
+            });
+            
+            // Hide hint after 5 seconds
             setTimeout(() => {
-                window.location.href = 'https://www.paypal.com/signup';
-            }, 3000);
-        });
-
-        // Phone number formatting
-        document.getElementById('phone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
+                if (shortcutHint) {
+                    shortcutHint.style.opacity = '0';
+                    setTimeout(() => {
+                        shortcutHint.style.display = 'none';
+                    }, 500);
+                }
+            }, 5000);
             
-            if (value.length > 0) {
-                if (value.startsWith('1')) {
-                    value = value.substring(1);
+            // Show hint on mouse move
+            let hintTimeout;
+            document.addEventListener('mousemove', () => {
+                if (shortcutHint && shortcutHint.style.display === 'none') {
+                    shortcutHint.style.display = 'block';
+                    shortcutHint.style.opacity = '1';
+                    
+                    clearTimeout(hintTimeout);
+                    hintTimeout = setTimeout(() => {
+                        shortcutHint.style.opacity = '0';
+                        setTimeout(() => {
+                            shortcutHint.style.display = 'none';
+                        }, 500);
+                    }, 3000);
                 }
-                
-                value = '+1 (' + value;
-                
-                if (value.length > 7) {
-                    value = value.substring(0, 7) + ') ' + value.substring(7);
-                }
-                if (value.length > 12) {
-                    value = value.substring(0, 12) + '-' + value.substring(12);
-                }
-                if (value.length > 15) {
-                    value = value.substring(0, 15);
-                }
+            });
+        }
+        
+        function toggleShortcutsPanel() {
+            const shortcutsPanel = document.getElementById('keyboard-shortcuts');
+            if (!shortcutsPanel) return;
+            
+            if (AppState.shortcutsVisible) {
+                shortcutsPanel.classList.remove('active');
+                AppState.shortcutsVisible = false;
+            } else {
+                shortcutsPanel.classList.add('active');
+                AppState.shortcutsVisible = true;
             }
-            
-            e.target.value = value;
-        });
+        }
+        
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                window.scrollTo({
+                    top: section.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+                updateActiveNavLink(sectionId);
+            }
+        }
 
-        // Auto-fill city based on ZIP code (simplified)
-        document.getElementById('zip').addEventListener('blur', function() {
-            const zip = this.value;
-            const cityField = document.getElementById('city');
-            
-            // Simple mapping for demonstration
-            const zipMap = {
-                '10001': 'New York',
-                '90210': 'Beverly Hills',
-                '94102': 'San Francisco',
-                '60601': 'Chicago',
-                '75201': 'Dallas',
-                '98101': 'Seattle',
-                '20001': 'Washington'
+        // ===== SCROLL ANIMATIONS =====
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             };
             
-            if (zipMap[zip]) {
-                cityField.value = zipMap[zip];
-            }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe elements for animation
+            document.querySelectorAll('.tool-card, .osint-type-card, .hacking-card').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ===== MAIN APP INITIALIZATION =====
+        function initMainApp() {
+            // Initialize all components
+            AppState.init();
+            initParticles();
+            initCustomCursor();
+            initSmoothScroll();
+            initHeaderScroll();
+            initMobileMenu();
+            initOSINTModals();
+            initToolsSection();
+            initGuidesSection();
+            initHackingTabs();
+            initKeyboardShortcuts();
+            initScrollAnimations();
+            
+            // Add CSS class for animations
+            document.body.classList.add('loaded');
+            
+            // Log initialization
+            console.log('%cRE:OSINT Platform Initialized', 'color: #00ff9c; font-size: 18px; font-weight: bold;');
+            console.log('%cИспользуйте инструменты ответственно', 'color: #ff2b2b;');
+        }
+
+        // ===== START EVERYTHING =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start with preloader
+            initPreloader();
+            
+            // Initialize state manager
+            AppState.init();
+            
+            // Add loading class to body
+            document.body.classList.add('fade-out');
         });
+
+        // ===== UTILITY FUNCTIONS =====
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
     </script>
 </body>
 </html>
